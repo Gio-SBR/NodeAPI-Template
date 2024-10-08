@@ -24,7 +24,7 @@ app.listen(port, () => {
 
 /*
 1. Add .env file
-2. In the .env file, add PORT = 3000
+2. In the .env file, add PORT = 3001  and API_KEY = ""Create guid for API key and insert here""
 3. If databaseConfig needed then add to .env file
 4. Run npm install
 5. Run npm run build
