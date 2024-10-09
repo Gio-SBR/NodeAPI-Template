@@ -1,6 +1,7 @@
 import sql from "mssql";
 import ParameterType from "../../../Types/Base/ParameterType";
-import { DBConnectionString } from "../../../Config/DatabaseConfig";
+
+const DBConnectionString = process.env.DBConnectionString;
 
 async function SendQuery(
   Query: Function,
