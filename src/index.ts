@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { APIKey } from "./Functions/Base/Auth/APIKey";
 import { API_Endpoints } from "./Endpoints/API/InitialiseAPIEndpoints";
+import { JWTEndpoints } from "./Functions/Base/Auth/JWTEndpoints/JWTEndpoints";
+import { AuthenticateJWT } from "./Functions/Base/Auth/AuthenticateJWT";
 
 dotenv.config();
 
@@ -13,7 +14,10 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use(APIKey);
+app.use("/auth", JWTEndpoints);
+
+//Middleware
+app.use(AuthenticateJWT);
 
 //Initialize all endpoints
 app.use("/api", API_Endpoints);
