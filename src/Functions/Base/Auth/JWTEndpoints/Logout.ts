@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { DeleteRefreshToken, GetRefreshToken } from "../Refresh/Query";
-import SendQuery from "../../../SendQuery/SendQuery";
+import SendQuery from "../../SendQuery/SendQuery";
+import { DeleteRefreshToken, GetRefreshToken } from "./Functions";
 
 export const Logout = Router();
 
@@ -14,23 +14,11 @@ Logout.post("/Logout", async (req, res) => {
       });
     } else {
       //Get Refresh Tokens
-      const RefreshTokens = (
-        await SendQuery(
-          GetRefreshToken,
-          undefined,
-          "Error when getting Refresh Tokens",
-          [{ Name: "RefreshToken", Value: RefreshToken }]
-        )
-      ).body;
+      const RefreshTokens = await GetRefreshToken(RefreshToken);
 
       //If token is in RefreshTokens then delete it
       if (RefreshTokens.length > 0) {
-        await SendQuery(
-          DeleteRefreshToken,
-          "Refresh Token Deleted",
-          "Error when deleting Refresh Token",
-          [{ Name: "RefreshToken", Value: RefreshToken! }]
-        );
+        await DeleteRefreshToken(RefreshToken);
         res.status(204).json({
           Message: "Logout Successful",
         });

@@ -1,6 +1,6 @@
-import SendQuery from "../SendQuery/SendQuery";
-import { GetUser } from "./JWTEndpoints/Login/Query";
 import bcrypt from "bcrypt";
+import SendQuery from "../../../SendQuery/SendQuery";
+import { GetUser } from "./Queries/GetUser";
 
 export async function AuthenticateUser(Username: string, Password: string) {
   try {
