@@ -17,8 +17,6 @@ Refresh.post("/Refresh", async (req, res) => {
     //Get Refresh Tokens
     const RefreshTokens = await GetRefreshToken(RefreshToken);
 
-    console.log("RefreshTokens", RefreshTokens);
-
     //If token is not in RefreshTokens then return error
     if (RefreshTokens.length > 0) {
       //Verify Token
