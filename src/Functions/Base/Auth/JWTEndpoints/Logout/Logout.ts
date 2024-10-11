@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { RefreshTokens, SetRefreshTokens } from "./JWTEndpoints";
+import { DeleteRefreshToken, GetRefreshTokens } from "../Refresh/Query";
+import SendQuery from "../../../SendQuery/SendQuery";
 
 export const Logout = Router();
 
@@ -12,9 +13,24 @@ Logout.post("/Logout", async (req, res) => {
         Error: "Invalid Refresh Token",
       });
     } else {
+      //Get Refresh Tokens
+      const RefreshTokens = (
+        await SendQuery(
+          GetRefreshTokens,
+          undefined,
+          "Error when getting Refresh Tokens",
+          undefined
+        )
+      ).body;
+
       //If token is in RefreshTokens then delete it
       if (RefreshTokens.includes(RefreshToken!)) {
-        SetRefreshTokens("Remove", RefreshToken!);
+        await SendQuery(
+          DeleteRefreshToken,
+          "Refresh Token Deleted",
+          "Error when deleting Refresh Token",
+          [{ Name: "RefreshToken", Value: RefreshToken! }]
+        );
         res.status(204).json({
           Message: "Logout Successful",
         });

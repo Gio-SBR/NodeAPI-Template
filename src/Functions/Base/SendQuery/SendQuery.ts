@@ -1,8 +1,6 @@
 import sql from "mssql";
 import ParameterType from "../../../Types/Base/ParameterType";
 
-const DBConnectionString = process.env.DBConnectionString;
-
 async function SendQuery(
   Query: Function,
   SuccessMessage?: string,
@@ -10,7 +8,9 @@ async function SendQuery(
   Params?: ParameterType[]
 ) {
   try {
-    const request = (await sql.connect(DBConnectionString!)).request();
+    const request = (
+      await sql.connect(process.env.DBConnectionString!)
+    ).request();
     if (Params !== null) {
       Params?.map((p) => {
         request.input(p.Name, p.Value);

@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { RefreshTokens, SetRefreshTokens } from "./JWTEndpoints";
 import jwt from "jsonwebtoken";
-import { GenerateAccessToken } from "../GenerateAccessToken";
+import SendQuery from "../../../SendQuery/SendQuery";
+import { DeleteRefreshToken, GetRefreshTokens } from "./Query";
+import { GenerateAccessToken } from "../../GenerateAccessToken";
 
 export const Refresh = Router();
 
@@ -15,20 +16,35 @@ Refresh.post("/Refresh", async (req, res) => {
       });
     }
 
+    //Get Refresh Tokens
+    const RefreshTokens = (
+      await SendQuery(
+        GetRefreshTokens,
+        undefined,
+        "Error when getting Refresh Tokens",
+        undefined
+      )
+    ).body;
+
     //If token is not in RefreshTokens then return error
     if (RefreshTokens.includes(RefreshToken!)) {
       //Verify Token
       jwt.verify(
         RefreshToken!,
         process.env.JWT_REFRESH_SECRET!,
-        (err: any, user: any) => {
+        async (err: any, user: any) => {
           if (err) {
             res.status(403).json({
               Error: "Invalid Refresh Token",
             });
           } else {
             //delete current token
-            SetRefreshTokens("Remove", RefreshToken!);
+            await SendQuery(
+              DeleteRefreshToken,
+              "Refresh Token Deleted",
+              "Error when deleting Refresh Token",
+              [{ Name: "RefreshToken", Value: RefreshToken! }]
+            );
 
             //Generate new tokens
             const NewAccessToken = GenerateAccessToken("Access", user.Username);

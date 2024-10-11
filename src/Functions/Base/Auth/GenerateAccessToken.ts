@@ -2,13 +2,13 @@ import jwt from "jsonwebtoken";
 
 export function GenerateAccessToken(
   TokenType: "Access" | "Refresh",
-  UserName: string
+  Username: string
 ) {
   try {
     //User Object
     const User = {
       TokenID: crypto.randomUUID(),
-      Username: UserName,
+      Username: Username,
       TokenCreationDate: new Date().toDateString(),
     };
 
