@@ -1,9 +1,12 @@
-export function GetRefreshTokens() {
+export function GetRefreshToken() {
   return `
         SELECT
-                RefreshToken
+                Token
         FROM
                 Auth.RefreshTokens
+
+        WHERE
+                Token = @RefreshToken
         `;
 }
 
@@ -13,6 +16,6 @@ export function DeleteRefreshToken() {
         FROM
                 Auth.RefreshTokens
         WHERE
-                RefreshToken = @RefreshToken
+                Token = @RefreshToken
         `;
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DeleteRefreshToken, GetRefreshTokens } from "../Refresh/Query";
+import { DeleteRefreshToken, GetRefreshToken } from "../Refresh/Query";
 import SendQuery from "../../../SendQuery/SendQuery";
 
 export const Logout = Router();
@@ -16,15 +16,15 @@ Logout.post("/Logout", async (req, res) => {
       //Get Refresh Tokens
       const RefreshTokens = (
         await SendQuery(
-          GetRefreshTokens,
+          GetRefreshToken,
           undefined,
           "Error when getting Refresh Tokens",
-          undefined
+          [{ Name: "RefreshToken", Value: RefreshToken }]
         )
       ).body;
 
       //If token is in RefreshTokens then delete it
-      if (RefreshTokens.includes(RefreshToken!)) {
+      if (RefreshTokens.length > 0) {
         await SendQuery(
           DeleteRefreshToken,
           "Refresh Token Deleted",

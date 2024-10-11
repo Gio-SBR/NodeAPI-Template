@@ -3,7 +3,7 @@ import { GenerateAccessToken } from "../../GenerateAccessToken";
 import SendQuery from "../../../SendQuery/SendQuery";
 import { AddRefreshToken, GetUser } from "./Query";
 import { User } from "../Types";
-import bcrypt from "bcrypt";
+import { AuthenticateUser } from "../../AuthenticateUser";
 
 export const Login = Router();
 
@@ -14,72 +14,45 @@ Login.post("/Login", async (req, res) => {
       Username: req.body.Username,
       Password: req.body.Password,
     };
-    if (RequestUser.Username === null || RequestUser.Password === null) {
-      res.status(400).json({
-        Error: "Invalid Username or Password",
-      });
-    }
 
-    //Hash Password
-    //GetUserFromDB
-    const GetUserResponse = await SendQuery(
-      GetUser,
-      undefined,
-      "User Not Found",
-      undefined
+    // Authenticate User
+    const userExists = await AuthenticateUser(
+      RequestUser.Username,
+      RequestUser.Password
     );
 
-    let DBUser: User = {
-      Username: "",
-      Password: "",
-    };
-    if (GetUserResponse.body[0].Message === "User Not Found") {
-      res.status(400).json({
-        Error: "User Not Found",
-      });
-    } else {
-      DBUser = GetUserResponse.body[0];
-    }
-    console.log(DBUser);
-
-    //Check password
-    const CheckPassword = await bcrypt.compare(
-      RequestUser.Password,
-      DBUser.Password
-    );
-    if (!CheckPassword) {
+    if (!userExists) {
       res.status(401).json({
         Error: "Invalid Username or Password",
       });
-    }
-
-    //Authenticate User
-    if (
-      DBUser.Username === RequestUser.Username &&
-      DBUser.Password === RequestUser.Password
-    ) {
-      const Username = DBUser.Username;
+    } else {
+      //Get User
+      const User = (
+        await SendQuery(GetUser, undefined, "User Not Found", [
+          { Name: "Username", Value: RequestUser.Username },
+        ])
+      ).body[0] as User;
 
       //Create Token
-      const Token = GenerateAccessToken("Access", Username);
-      const RefreshToken = GenerateAccessToken("Refresh", Username);
+      const Token = GenerateAccessToken("Access", RequestUser.Username);
+      const RefreshToken = GenerateAccessToken("Refresh", RequestUser.Username);
 
       //Store Refresh Token
-      await SendQuery(
+      const AddRefreshTokenResponse = await SendQuery(
         AddRefreshToken,
         "Refresh Token Stored",
         "Error when storing Refresh Token",
-        [{ Name: "RefreshToken", Value: RefreshToken }]
+        [
+          { Name: "RefreshToken", Value: RefreshToken },
+          { Name: "fkUserId", Value: User.pkUserId },
+        ]
       );
+      console.log("AddRefreshTokenResponse", AddRefreshTokenResponse);
 
       //Return Token
       res.status(200).json({
         AccessToken: Token,
         RefreshToken: RefreshToken,
-      });
-    } else {
-      res.status(401).json({
-        Error: "Invalid Username or Password",
       });
     }
   } catch (error) {

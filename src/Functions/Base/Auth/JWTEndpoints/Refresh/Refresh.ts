@@ -1,7 +1,7 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import SendQuery from "../../../SendQuery/SendQuery";
-import { DeleteRefreshToken, GetRefreshTokens } from "./Query";
+import { DeleteRefreshToken, GetRefreshToken } from "./Query";
 import { GenerateAccessToken } from "../../GenerateAccessToken";
 
 export const Refresh = Router();
@@ -19,15 +19,17 @@ Refresh.post("/Refresh", async (req, res) => {
     //Get Refresh Tokens
     const RefreshTokens = (
       await SendQuery(
-        GetRefreshTokens,
+        GetRefreshToken,
         undefined,
         "Error when getting Refresh Tokens",
-        undefined
+        [{ Name: "RefreshToken", Value: RefreshToken }]
       )
     ).body;
 
+    console.log("RefreshTokens", RefreshTokens);
+
     //If token is not in RefreshTokens then return error
-    if (RefreshTokens.includes(RefreshToken!)) {
+    if (RefreshTokens.length > 0) {
       //Verify Token
       jwt.verify(
         RefreshToken!,

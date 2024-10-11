@@ -1,8 +1,7 @@
 export function GetUser() {
   return `
     SELECT TOP 1
-        Username,
-        Password
+        *
     FROM
         Auth.Users
     WHERE
@@ -14,11 +13,13 @@ export function AddRefreshToken() {
   return `
     INSERT INTO Auth.RefreshTokens
     (
-        RefreshToken
+        Token,
+        fkUserId
     )
     VALUES
     (
-        @RefreshToken
+        @RefreshToken,
+        @fkUserId
     )
     `;
 }

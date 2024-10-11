@@ -9,7 +9,7 @@ async function SendQuery(
 ) {
   try {
     const request = (
-      await sql.connect(process.env.DBConnectionString!)
+      await sql.connect(process.env.DB_CONNECTION_STRING!)
     ).request();
     if (Params !== null) {
       Params?.map((p) => {
