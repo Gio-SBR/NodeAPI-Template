@@ -1,4 +1,4 @@
-export function GetUser() {
+export function Query() {
   return `
         SELECT TOP 1
             *

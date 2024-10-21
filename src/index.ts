@@ -4,8 +4,7 @@ import cors from "cors";
 import { API_Endpoints } from "./Endpoints/API/InitialiseAPIEndpoints";
 import { JWTEndpoints } from "./Functions/Base/Authorisation/JWTEndpoints/JWTEndpoints";
 import { AuthenticateJWT } from "./Functions/Base/Authorisation/JWTEndpoints/Functions/Tokens/AuthenticateJWT";
-import { GetUserScopes } from "./Functions/Base/Authentication/GetUserScopes";
-import { SetUser } from "./Functions/Base/Authentication/SetUser";
+import { CheckCompanyScope } from "./Functions/Base/Authentication/CheckCompanyScope";
 
 dotenv.config();
 
@@ -19,16 +18,16 @@ app.use(cors());
 app.use("/auth", JWTEndpoints);
 
 //Middleware
-app.use(AuthenticateJWT, SetUser);
+app.use(AuthenticateJWT);
 
-//Authentication Middleware
-const Scopes = ["Access_Health_Check", "Access_API"];
-
-//GetUserScopes
-app.use(GetUserScopes);
+//console log user details
+app.use((req: any, res: any, next: any) => {
+  console.log("User: ", req.user);
+  next();
+});
 
 //Initialize all endpoints
-app.use("/api", API_Endpoints);
+app.use("/api", CheckCompanyScope("Access_API"), API_Endpoints);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

@@ -1,6 +1,4 @@
-import { APIUser } from "./SetUser";
-
-export function CheckScope(ScopeNeeded: string) {
+export function CheckUserScope(ScopeNeeded: string) {
   return (req: any, res: any, next: any) => {
     try {
       if (req.user.Scopes.includes(ScopeNeeded)) {

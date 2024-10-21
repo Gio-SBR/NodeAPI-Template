@@ -1,8 +1,9 @@
 import SendQuery from "../../../../../SendQuery/SendQuery";
+import { Query } from "./Query";
 
 export async function GetUser(Username: string) {
   try {
-    const response = await SendQuery(GetUser, undefined, "User Not Found", [
+    const response = await SendQuery(Query, undefined, "User Not Found", [
       { Name: "Username", Value: Username },
     ]);
 

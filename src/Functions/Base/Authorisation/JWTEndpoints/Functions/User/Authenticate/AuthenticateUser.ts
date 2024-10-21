@@ -6,14 +6,11 @@ export async function AuthenticateUser(Username: string, Password: string) {
     if (Username === null || Password === null) {
       return false;
     } else {
-      const GetUserResponse = await GetUser(Username);
-      if (GetUserResponse.body.length > 0) {
-        let DBUser = GetUserResponse.body[0];
-        if (await bcrypt.compare(Password, DBUser.Password)) {
-          return true;
-        } else {
-          return false;
-        }
+      const DBUser = await GetUser(Username);
+      if (await bcrypt.compare(Password, DBUser.Password)) {
+        return true;
+      } else {
+        return false;
       }
     }
   } catch (error) {

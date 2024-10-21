@@ -27,7 +27,7 @@ Login.post("/Login", async (req, res) => {
       });
     } else {
       //Create Token
-      const Tokens = GenerateTokens({
+      const Tokens = await GenerateTokens({
         Username: RequestUser.Username,
         DeleteOld: false,
       });
