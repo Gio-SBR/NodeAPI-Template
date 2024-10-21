@@ -22,6 +22,7 @@ export async function GenerateTokens(Props: Props) {
     const User = {
       TokenID: crypto.randomUUID(),
       Username: Username,
+      Scopes: ["", "Access_API"],
       TokenCreationDate: new Date().toDateString(),
     };
 

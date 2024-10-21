@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { API_Endpoints } from "./Endpoints/API/InitialiseAPIEndpoints";
-import { JWTEndpoints } from "./Functions/Base/Auth/JWTEndpoints/JWTEndpoints";
-import { AuthenticateJWT } from "./Functions/Base/Auth/JWTEndpoints/Functions/Tokens/AuthenticateJWT";
+import { JWTEndpoints } from "./Functions/Base/Authorisation/JWTEndpoints/JWTEndpoints";
+import { AuthenticateJWT } from "./Functions/Base/Authorisation/JWTEndpoints/Functions/Tokens/AuthenticateJWT";
+import { GetUserScopes } from "./Functions/Base/Authentication/GetUserScopes";
+import { SetUser } from "./Functions/Base/Authentication/SetUser";
 
 dotenv.config();
 
@@ -17,7 +19,13 @@ app.use(cors());
 app.use("/auth", JWTEndpoints);
 
 //Middleware
-app.use(AuthenticateJWT);
+app.use(AuthenticateJWT, SetUser);
+
+//Authentication Middleware
+const Scopes = ["Access_Health_Check", "Access_API"];
+
+//GetUserScopes
+app.use(GetUserScopes);
 
 //Initialize all endpoints
 app.use("/api", API_Endpoints);
