@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { API_Endpoints } from "./Endpoints/API/InitialiseAPIEndpoints";
 import { JWTEndpoints } from "./Functions/Base/Auth/JWTEndpoints/JWTEndpoints";
-import { AuthenticateJWT } from "./Functions/Base/Auth/JWTEndpoints/Functions/AuthenticateJWT";
+import { AuthenticateJWT } from "./Functions/Base/Auth/JWTEndpoints/Functions/Tokens/AuthenticateJWT";
 
 dotenv.config();
 
