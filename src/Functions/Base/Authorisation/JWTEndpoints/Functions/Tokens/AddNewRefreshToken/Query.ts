@@ -1,4 +1,4 @@
-export function AddRefreshToken() {
+export function Query() {
   return `
       INSERT INTO Auth.RefreshTokens
       (
@@ -7,7 +7,7 @@ export function AddRefreshToken() {
       )
       VALUES
       (
-          @RefreshToken,
+          @Token,
           @fkUserId
       )
       `;

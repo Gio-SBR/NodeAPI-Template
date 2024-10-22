@@ -19,7 +19,12 @@ Refresh.post("/Refresh", async (req, res) => {
 
     //If token is not in RefreshTokens then return error
     if (RefreshTokens.length > 0) {
+      //verify token start
+      console.log("token verification started: ", new Date().toTimeString());
       //Verify Token
+      let tokenVerified = true;
+      let Username = "";
+      let UserId = "";
       jwt.verify(
         RefreshToken!,
         process.env.JWT_REFRESH_SECRET!,
@@ -29,19 +34,30 @@ Refresh.post("/Refresh", async (req, res) => {
               Error: "Invalid Refresh Token",
             });
           } else {
-            //Generate new tokens
-            const Tokens = await GenerateTokens({
-              Username: user.Username,
-              DeleteOld: true,
-              OldToken: RefreshToken,
-            });
-
-            //Return Tokens
-            res.status(200).json(Tokens);
+            tokenVerified = true;
+            Username = user.Username;
+            UserId = user.UserId;
           }
         }
       );
+
+      if (tokenVerified) {
+        console.log("token verified: ", new Date().toTimeString());
+        //Generate new tokens
+        const Tokens = await GenerateTokens({
+          UserId: UserId,
+          Username: Username,
+          DeleteOld: true,
+          OldToken: RefreshToken,
+        });
+
+        console.log("new tokens generated: ", new Date().toTimeString());
+
+        //Return Tokens
+        res.status(200).json(Tokens);
+      }
     } else {
+      //If token is not in RefreshTokens then return error
       res.status(400).json({
         Error: "Invalid Refresh Token",
       });

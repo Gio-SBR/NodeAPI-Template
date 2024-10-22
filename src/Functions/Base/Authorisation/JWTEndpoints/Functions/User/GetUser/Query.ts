@@ -1,6 +1,6 @@
 export function Query() {
   return `
-        SELECT TOP 1
+        SELECT
             *
         FROM
             Auth.Users

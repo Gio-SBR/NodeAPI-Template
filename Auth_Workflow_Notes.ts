@@ -64,7 +64,7 @@ Request Permissions - Org
             Yes
                 add permission to Auth.OrganisationResource table using Resource Id
             No
-                Crete new resource
+                Create new resource
                 add permission to Auth.OrganisationResource table using Resource Id
 */
 
@@ -73,7 +73,7 @@ Request Permissions - User
     Only Admins can change permissions
     Set by users in front end
 
-    Retrieve user roles within this org from Auth,User table
+    Retrieve user roles within this org from Auth.User table
         Does user already have permissions
             Yes
                 Don't allow
@@ -82,7 +82,7 @@ Request Permissions - User
 */
 
 /*
-Change User Permissions
+Change available Permissions
     done by dev team in back end
 
     Add new permission to Auth.Permission

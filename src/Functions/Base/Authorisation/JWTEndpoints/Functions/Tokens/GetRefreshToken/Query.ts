@@ -1,4 +1,4 @@
-export function GetRefreshToken() {
+export function Query() {
   return `
           SELECT
                   Token

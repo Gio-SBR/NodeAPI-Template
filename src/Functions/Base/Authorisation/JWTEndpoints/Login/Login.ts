@@ -16,19 +16,18 @@ Login.post("/Login", async (req, res) => {
     };
 
     // Authenticate User
-    const userExists = await AuthenticateUser(
-      RequestUser.Username,
-      RequestUser.Password
-    );
+    const userExists: { userExists: boolean; userInfo: any } =
+      await AuthenticateUser(RequestUser.Username, RequestUser.Password);
 
-    if (!userExists) {
+    if (!userExists.userExists) {
       res.status(401).json({
         Error: "Invalid Username or Password",
       });
     } else {
       //Create Token
       const Tokens = await GenerateTokens({
-        Username: RequestUser.Username,
+        Username: userExists.userInfo.Username,
+        UserId: userExists.userInfo.UserID,
         DeleteOld: false,
       });
 

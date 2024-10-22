@@ -3,18 +3,28 @@ import { GetUser } from "../GetUser";
 
 export async function AuthenticateUser(Username: string, Password: string) {
   try {
+    const noUserObject = {
+      userExists: false,
+      userInfo: null,
+    };
     if (Username === null || Password === null) {
-      return false;
+      return noUserObject;
     } else {
       const DBUser = await GetUser(Username);
       if (await bcrypt.compare(Password, DBUser.Password)) {
-        return true;
+        return {
+          userExists: true,
+          userInfo: DBUser,
+        };
       } else {
-        return false;
+        return noUserObject;
       }
     }
   } catch (error) {
     console.log(error);
-    return false;
+    return {
+      userExists: false,
+      userInfo: null,
+    };
   }
 }

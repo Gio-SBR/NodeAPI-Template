@@ -7,6 +7,8 @@ export async function GetUser(Username: string) {
       { Name: "Username", Value: Username },
     ]);
 
+    console.log("Get User: ", response);
+
     if (response.body.length > 0) {
       return response.body[0];
     } else {

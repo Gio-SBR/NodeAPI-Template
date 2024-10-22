@@ -1,24 +1,19 @@
 import SendQuery from "../../../../../SendQuery/SendQuery";
-import { GetUser } from "../../User";
-import { AddRefreshToken } from "./Query";
+import { TokenUser } from "../../Types";
+import { Query } from "./Query";
 
-export async function AddNewRefreshToken(Username: string, NewToken: string) {
+export async function AddNewRefreshToken(User: TokenUser, NewToken: string) {
+  const { UserId } = User;
   //Get User
   try {
-    const User = await GetUser(Username);
-
-    if (User === null) {
-      return;
-    }
-
     //Store Refresh Token
     await SendQuery(
-      AddRefreshToken,
+      Query,
       "Refresh Token Added",
       "Error when adding Refresh Token",
       [
         { Name: "Token", Value: NewToken },
-        { Name: "fkUserId", Value: User.pkUserId },
+        { Name: "fkUserId", Value: UserId },
       ]
     );
   } catch (error) {

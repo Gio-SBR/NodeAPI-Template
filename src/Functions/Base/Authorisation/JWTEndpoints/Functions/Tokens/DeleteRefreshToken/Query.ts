@@ -1,4 +1,4 @@
-export function DeleteRefreshToken() {
+export function Query() {
   return `
           DELETE
           FROM
